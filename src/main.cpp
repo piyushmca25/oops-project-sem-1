@@ -73,15 +73,32 @@ public:
 class Food
 {
 public:
-	static Texture2D texture;
-	Vector2 position;
+	static Texture2D textures[4];
+	static bool loaded; 
+    Vector2 position;
+    int textureIndex; 
 	Food(deque<Vector2> snakeBody){
-		if (texture.id == 0)   // load only one time
+		if (!loaded)
 		{
-			Image image = LoadImage("graphics/food2.png");
-			texture = LoadTextureFromImage(image);
-			UnloadImage(image);
+			Image img1 = LoadImage("graphics/food1.png");
+			Image img2 = LoadImage("graphics/food2.png");
+			Image img3 = LoadImage("graphics/food3.png");
+			Image img4 = LoadImage("graphics/food4.png");
+
+			textures[0] = LoadTextureFromImage(img1);
+			textures[1] = LoadTextureFromImage(img2);
+			textures[2] = LoadTextureFromImage(img3);
+			textures[3] = LoadTextureFromImage(img4);
+
+			UnloadImage(img1);
+			UnloadImage(img2);
+			UnloadImage(img3);
+			UnloadImage(img4);
+
+			loaded = true;
 		}
+
+		textureIndex = GetRandomValue(0, 3);
 
 		position = GenerateRandomPos(snakeBody);
 	}
@@ -104,11 +121,17 @@ public:
 
 	void Draw()
 	{
-		DrawTexture(texture, offset + position.x * cellsize, offset + position.y * cellsize, WHITE);
+		DrawTexture(
+			textures[textureIndex],
+			offset + position.x * cellsize,
+			offset + position.y * cellsize,
+			WHITE
+		);
 	}
 };
 
-Texture2D Food::texture = {0};
+Texture2D Food::textures[4] = {0};
+bool Food::loaded = false;
 class Game
 {
 public:
@@ -133,7 +156,8 @@ public:
 	}
 	~Game()
 	{
-		UnloadTexture(Food::texture);
+		for (int i = 0; i < 4; i++)
+			UnloadTexture(Food::textures[i]);
 		UnloadSound(eat);
 		UnloadSound(wall);
 		CloseAudioDevice();
@@ -150,7 +174,8 @@ public:
 		{
 			if (Vector2Equals(snake.body[0], f.position))
 			{
-				f.position = f.GenerateRandomPos(snake.body);  // respawn only this fruit
+				f.position = f.GenerateRandomPos(snake.body); 
+				f.textureIndex = GetRandomValue(0, 3); // respawn only this fruit
 				snake.addSegment = true;
 				score++;
 
