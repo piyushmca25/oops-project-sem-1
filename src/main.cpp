@@ -3,6 +3,7 @@
 #include <deque>
 #include <raymath.h>
 #include "button.hpp"
+#include <vector>
 using namespace std;
 Color green = {173, 204, 96, 255};
 Color darkGreen = {43, 51, 24, 255};
@@ -11,7 +12,6 @@ int cellcount = 25;
 double lastUpdateTime = 0;
 int offset = 75;
 int temp_score;
-
 int high_score = 0;
 bool ElementInDeque(Vector2 element, deque<Vector2> deque)
 {
@@ -73,20 +73,17 @@ public:
 class Food
 {
 public:
-	Texture2D texture;
+	static Texture2D texture;
 	Vector2 position;
-	Food(deque<Vector2> snakeBody)
-	{
-		Image image;
-		image = LoadImage("graphics/food.png");
-		texture = LoadTextureFromImage(image);
-		UnloadImage(image);
-		position = GenerateRandomPos(snakeBody);
-	}
+	Food(deque<Vector2> snakeBody){
+		if (texture.id == 0)   // load only one time
+		{
+			Image image = LoadImage("graphics/food2.png");
+			texture = LoadTextureFromImage(image);
+			UnloadImage(image);
+		}
 
-	~Food()
-	{
-		UnloadTexture(texture);
+		position = GenerateRandomPos(snakeBody);
 	}
 
 	Vector2 GenerateRandomCell()
@@ -98,12 +95,11 @@ public:
 
 	Vector2 GenerateRandomPos(deque<Vector2> snakeBody)
 	{
-		Vector2 position = GenerateRandomCell();
-		while (ElementInDeque(position, snakeBody))
-		{
-			position = GenerateRandomCell();
+		Vector2 newPos = GenerateRandomCell();
+		while (ElementInDeque(newPos, snakeBody)) {
+			newPos = GenerateRandomCell();
 		}
-		return position;
+		return newPos;
 	}
 
 	void Draw()
@@ -112,14 +108,16 @@ public:
 	}
 };
 
+Texture2D Food::texture = {0};
 class Game
 {
 public:
 	int score = 0;
+	double speed=0.2;
 	bool running = false;
 	bool game_over = false;
 	Snake snake = Snake();
-	Food food = Food(snake.body);
+	vector<Food> fruits;
 	Sound wall;
 	Sound eat;
 	Game()
@@ -127,9 +125,15 @@ public:
 		InitAudioDevice();
 		wall = LoadSound("sounds/wall.mp3");
 		eat = LoadSound("sounds/eat.mp3");
+		int fruitCount = 3; 
+		for (int i = 0; i < fruitCount; i++)
+		{
+			fruits.push_back(Food(snake.body));
+		}
 	}
 	~Game()
 	{
+		UnloadTexture(Food::texture);
 		UnloadSound(eat);
 		UnloadSound(wall);
 		CloseAudioDevice();
@@ -137,19 +141,25 @@ public:
 	void Draw()
 	{
 		snake.Draw();
-		food.Draw();
+		for (auto &f : fruits)
+			f.Draw();
 	}
 
-	void CheckCollisionWithFood()
-	{
-		if (Vector2Equals(snake.body[0], food.position))
+	void CheckCollisionWithFood(){
+		for (auto &f : fruits)
 		{
-			food.position = food.GenerateRandomPos(snake.body);
-			snake.addSegment = true;
-			score++;
-			PlaySound(eat);
+			if (Vector2Equals(snake.body[0], f.position))
+			{
+				f.position = f.GenerateRandomPos(snake.body);  // respawn only this fruit
+				snake.addSegment = true;
+				score++;
+
+				speed *= 0.98;  // 2% faster per point
+				PlaySound(eat);
+			}
 		}
 	}
+
 	void CheckCollisionWithEdges()
 	{
 		if (snake.body[0].x == cellcount || snake.body[0].x == -1)
@@ -188,7 +198,12 @@ public:
 	{
 		game_over = true;
 		snake.Reset();
-		food.position = food.GenerateRandomPos(snake.body);
+		fruits.clear();
+		for (int i = 0; i < 3; i++)
+		{
+			fruits.push_back(Food(snake.body));
+		}
+		speed = 0.2;
 		running = false;
 		if (score >= high_score)
 		{
@@ -196,6 +211,7 @@ public:
 		}
 		temp_score = score;
 		score = 0;
+		speed = 0.2;
 	}
 };
 int main()
@@ -261,7 +277,7 @@ int main()
 				DrawRectangleLinesEx(Rectangle{(float)offset - 5, (float)offset - 5, (float)cellsize * cellcount + 10, (float)cellsize * cellcount + 10}, 5, darkGreen);
 				DrawText(TextFormat("Score: %i", game.score), offset - 10, offset + cellsize * cellcount + 10, 40, darkGreen);
 				DrawText(TextFormat("High Score: %i", high_score), cellcount * cellsize - 185, offset + cellsize * cellcount + 10, 40, darkGreen);
-				if (EventTriggered(0.2))
+				if (EventTriggered(game.speed))
 				{
 					game.Update();
 				}
