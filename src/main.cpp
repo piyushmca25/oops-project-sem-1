@@ -74,10 +74,11 @@ class Food
 {
 public:
 	static Texture2D textures[4];
-	static bool loaded; 
-    Vector2 position;
-    int textureIndex; 
-	Food(deque<Vector2> snakeBody){
+	static bool loaded;
+	Vector2 position;
+	int textureIndex;
+	Food(deque<Vector2> snakeBody)
+	{
 		if (!loaded)
 		{
 			Image img1 = LoadImage("graphics/food1.png");
@@ -113,7 +114,8 @@ public:
 	Vector2 GenerateRandomPos(deque<Vector2> snakeBody)
 	{
 		Vector2 newPos = GenerateRandomCell();
-		while (ElementInDeque(newPos, snakeBody)) {
+		while (ElementInDeque(newPos, snakeBody))
+		{
 			newPos = GenerateRandomCell();
 		}
 		return newPos;
@@ -125,8 +127,7 @@ public:
 			textures[textureIndex],
 			offset + position.x * cellsize,
 			offset + position.y * cellsize,
-			WHITE
-		);
+			WHITE);
 	}
 };
 
@@ -136,7 +137,7 @@ class Game
 {
 public:
 	int score = 0;
-	double speed=0.2;
+	double speed = 0.2;
 	bool running = false;
 	bool game_over = false;
 	Snake snake = Snake();
@@ -148,7 +149,7 @@ public:
 		InitAudioDevice();
 		wall = LoadSound("sounds/wall.mp3");
 		eat = LoadSound("sounds/eat.mp3");
-		int fruitCount = 3; 
+		int fruitCount = 3;
 		for (int i = 0; i < fruitCount; i++)
 		{
 			fruits.push_back(Food(snake.body));
@@ -169,17 +170,18 @@ public:
 			f.Draw();
 	}
 
-	void CheckCollisionWithFood(){
+	void CheckCollisionWithFood()
+	{
 		for (auto &f : fruits)
 		{
 			if (Vector2Equals(snake.body[0], f.position))
 			{
-				f.position = f.GenerateRandomPos(snake.body); 
+				f.position = f.GenerateRandomPos(snake.body);
 				f.textureIndex = GetRandomValue(0, 3); // respawn only this fruit
 				snake.addSegment = true;
 				score++;
 
-				speed *= 0.98;  // 2% faster per point
+				speed *= 0.98; // 2% faster per point
 				PlaySound(eat);
 			}
 		}
@@ -311,28 +313,28 @@ int main()
 				{
 
 					game.snake.direction = {0, -1};
-					WaitTime(0.1);
+					WaitTime(0.15);
 					game.running = true;
 				}
 				if (IsKeyPressed(KEY_DOWN) && game.snake.direction.y != -1)
 				{
 
 					game.snake.direction = {0, 1};
-					WaitTime(0.1);
+					WaitTime(0.15);
 					game.running = true;
 				}
 				if (IsKeyPressed(KEY_LEFT) && game.snake.direction.x != 1)
 				{
 
 					game.snake.direction = {-1, 0};
-					WaitTime(0.1);
+					WaitTime(0.15);
 					game.running = true;
 				}
 				if (IsKeyPressed(KEY_RIGHT) && game.snake.direction.x != -1)
 				{
 
 					game.snake.direction = {1, 0};
-					WaitTime(0.1);
+					WaitTime(0.15);
 					game.running = true;
 				}
 			}
