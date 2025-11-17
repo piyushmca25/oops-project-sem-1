@@ -10,9 +10,6 @@ using namespace std;
 /*
  * Global color definitions
  * Objective: Reusable colors for the game's UI and drawing.
- * Input: none
- * Output: none
- * Return value: none
  * Side effects: None, purely cosmetic values used by drawing commands.
  */
 Color green = {173, 204, 96, 255};     // background color used for the main playing area
@@ -21,9 +18,6 @@ Color darkGreen = {43, 51, 24, 255};  // used for borders, snake segments and te
 /*
  * Layout and timing globals
  * Objective: control the grid size, speed and offsets for drawing.
- * Input: none
- * Output: none
- * Return value: none
  * Side effects: these values affect drawing scale and game behavior globally.
  */
 int cellsize = 30;    // size in pixels of a single grid cell
@@ -358,9 +352,6 @@ public:
     /*
      * Constructor
      * Objective: initialize audio subsystem, load sounds and populate initial fruits.
-     * Input: none
-     * Output: sets up Game resources
-     * Return value: none
      * Side effects: allocates audio resources and loads files from disk (may fail on missing files)
      *
      * Approach: call InitAudioDevice, load sound files and create N Food objects while avoiding the snake.
@@ -383,9 +374,6 @@ public:
     /*
      * Destructor
      * Objective: release GPU textures and audio resources when Game object is destroyed.
-     * Input: none
-     * Output: resources freed
-     * Return value: none
      * Side effects: unloading textures and closing audio device affects other audio code
      *
      * Approach: unload each of the shared Food textures (4), unload sounds and close audio.
