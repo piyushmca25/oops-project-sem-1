@@ -18,7 +18,7 @@ This project was developed as part of an Object-Oriented Programming Systems (OO
 |--------|--------------|
 | **Piyush Khanna** | Game Logic + Game Design |
 | **Tanubhav Juneja** | Game Logic + Game Design |
-| **Rashmi Desai** | Game Logic + Documentation |
+| **Rashmi Shah** | Game Logic + Documentation |
 | **Gunjal Manocha** | Documentation + QA |
 
 ---
