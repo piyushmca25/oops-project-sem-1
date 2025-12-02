@@ -9,16 +9,16 @@ using namespace std;
 
 /*
  * Global color definitions
- * Objective: Reusable colors for the game's UI and drawing.
- * Side effects: None, purely cosmetic values used by drawing commands.
+ * OBJECTIVE: Reusable colors for the game's UI and drawing.
+ * SIDE EFFECTS: None, purely cosmetic values used by drawing commands.
  */
 Color green = {173, 204, 96, 255};     // background color used for the main playing area
 Color darkGreen = {43, 51, 24, 255};  // used for borders, snake segments and text
 
 /*
  * Layout and timing globals
- * Objective: control the grid size, speed and offsets for drawing.
- * Side effects: these values affect drawing scale and game behavior globally.
+ * OBJECTIVE: control the grid size, speed and offsets for drawing.
+ * SIDE EFFECTS: these values affect drawing scale and game behavior globally.
  */
 int cellsize = 30;    // size in pixels of a single grid cell
 int cellcount = 25;   // number of cells per row/column (square grid)
@@ -29,14 +29,14 @@ int high_score = 0;   // persisted high score for the current program run
 
 /*
  * ElementInDeque
- * Objective: Check whether a given Vector2 (cell) exists within a deque of Vector2.
- * Input: Vector2 element - the cell to search for
+ * OBJECTIVE: Check whether a given Vector2 (cell) exists within a deque of Vector2.
+ * INPUT : Vector2 element - the cell to search for
  *        deque<Vector2> deque - the container to search in (passed by value in original code)
- * Output: none
- * Return value: bool - true if the element exists in the deque, false otherwise
- * Side effects: none (pure query)
+ * OUTPUT: none
+ * RETURN VALUE: bool - true if the element exists in the deque, false otherwise
+ * SIDE EFFECTS: none (pure query)
  *
- * Approach:
+ * APPROACH:
  * Iterate through all elements of the deque and compare each with the target
  * using Vector2Equals from raymath.h. Early return on match.
  *
@@ -59,19 +59,19 @@ bool ElementInDeque(Vector2 element, deque<Vector2> deque)
 
 /*
  * EventTriggered
- * Objective: determine whether the given time interval has elapsed since
+ * OBJECTIVE: determine whether the given time interval has elapsed since
  *            the last recorded update (lastUpdateTime) and, if so, update
  *            lastUpdateTime and return true.
- * Input: double interval - minimum seconds between events
- * Output: none
- * Return value: bool - true if enough time has passed; false otherwise
- * Side effects: updates global lastUpdateTime when returning true; affects game timing
+ * INPUT : double interval - minimum seconds between events
+ * OUTPUT: none
+ * RETURN VALUE: bool - true if enough time has passed; false otherwise
+ * SIDE EFFECTS: updates global lastUpdateTime when returning true; affects game timing
  *
- * Approach:
+ * APPROACH:
  * Compare the current time (GetTime) against lastUpdateTime. If difference >= interval,
  * set lastUpdateTime to current time and return true; otherwise return false.
  *
- * Variable definition and use:
+ * VARIABLE DEFINITION AND USE:
  * currentTime - fetched from raylib's GetTime() which returns seconds as double.
  */
 bool EventTriggered(double interval)
@@ -87,12 +87,12 @@ bool EventTriggered(double interval)
 
 /*
  * Snake class
- * Objective: encapsulates the snake's state and operations (draw, update, reset).
- * Member variables:
+ * OBJECTIVE: encapsulates the snake's state and operations (draw, update, reset).
+ * MEMBER VARIABLES:
  *  - addSegment : when true, the snake will grow by one segment on next update.
  *  - body       : deque of Vector2 representing the grid cells occupied by the snake.
  *  - direction  : unit Vector2 indicating the current movement direction (e.g., {1,0}).
- * Member functions:
+ * MEMBER FUNCTIONS:
  *  - Draw()     : draws all segments of the snake.
  *  - Update()   : advances the snake by one cell in the current direction.
  *  - Reset()    : restores initial position and direction.
@@ -106,16 +106,16 @@ public:
 
     /*
      * Draw
-     * Objective: render each segment of the snake onto the screen.
-     * Input: none (uses member variables and global drawing context)
-     * Output: draws rectangles to the active RenderTexture/Screen
-     * Return value: void
-     * Side effects: performs drawing operations which depend on raylib BeginDrawing/EndDrawing
+     * OBJECTIVE: render each segment of the snake onto the screen.
+     * INPUT : none (uses member variables and global drawing context)
+     * OUTPUT: draws rectangles to the active RenderTexture/Screen
+     * RETURN VALUE: void
+     * SIDE EFFECTS: performs drawing operations which depend on raylib BeginDrawing/EndDrawing
      *
-     * Approach:
+     * APPROACH:
      * Iterate through body deque and draw a rounded rectangle for each cell.
      *
-     * Variable definition and use:
+     * VARIABLE DEFINITION AND USE:
      * x, y - coordinates of segment
      * segment - Rectangle used for DrawRectangleRounded
      */
@@ -136,17 +136,17 @@ public:
 
     /*
      * Update
-     * Objective: move the snake one cell in the current direction, and optionally grow.
-     * Input: none (uses member variables)
-     * Output: modifies the body deque
-     * Return value: void
-     * Side effects: mutates snake.body and addSegment
+     * OBJECTIVE: move the snake one cell in the current direction, and optionally grow.
+     * INPUT : none (uses member variables)
+     * OUTPUT: modifies the body deque
+     * RETURN VALUE: void
+     * SIDE EFFECTS: mutates snake.body and addSegment
      *
-     * Approach:
+     * APPROACH:
      * Push a new head position equal to head + direction; if addSegment is true, leave the
      * tail so the snake grows; otherwise pop the tail to keep length constant.
      *
-     * Variable definition and use:
+     * VARIABLE DEFINITION AND USE:
      * (no extra locals)
      */
     void Update()
@@ -166,13 +166,13 @@ public:
 
     /*
      * Reset
-     * Objective: restore the snake to its initial starting configuration.
-     * Input: none
-     * Output: resets member variables body and direction
-     * Return value: void
-     * Side effects: mutates snake state used by game loop
+     * OBJECTIVE: restore the snake to its initial starting configuration.
+     * INPUT : none
+     * OUTPUT: resets member variables body and direction
+     * RETURN VALUE: void
+     * SIDE EFFECTS: mutates snake state used by game loop
      *
-     * Approach: assign initial literal values for body and direction.
+     * APPROACH: assign initial literal values for body and direction.
      */
     void Reset()
     {
@@ -184,14 +184,14 @@ public:
 
 /*
  * Food class
- * Objective: represent a food item that the snake can eat. Manages textures for different
+ * OBJECTIVE: represent a food item that the snake can eat. Manages textures for different
  *            food visuals and generates positions that do not collide with the snake.
  *
- * Static members:
+ * STATIC MEMBERS:
  *  - textures[] : array of 4 textures shared by all Food instances to avoid reloading.
  *  - loaded     : flag indicating static textures have been loaded.
  *
- * Instance members:
+ * INSTANCE MEMBERS:
  *  - position   : grid cell where this food is located
  *  - textureIndex : which texture to draw from textures[]
  */
@@ -204,19 +204,19 @@ public:
     int textureIndex;             // index into textures[] to select visual
 
     /*
-     * Constructor
-     * Objective: initialize the food instance, load static textures if needed and
+     * CONSTRUCTOR
+     * OBJECTIVE: initialize the food instance, load static textures if needed and
      *            pick a random free position not occupied by the snake.
-     * Input: deque<Vector2> snakeBody - current snake body to avoid placing food on it
-     * Output: sets position and textureIndex. On first call may load textures from disk.
-     * Return value: none
-     * Side effects: loads and stores static textures; uses raylib file IO so failures affect program
+     * INPUT : deque<Vector2> snakeBody - current snake body to avoid placing food on it
+     * OUTPUT: sets position and textureIndex. On first call may load textures from disk.
+     * RETURN VALUE: none
+     * SIDE EFFECTS: loads and stores static textures; uses raylib file IO so failures affect program
      *
-     * Approach:
+     * APPROACH:
      * If textures are not yet loaded, load four images from disk and convert to textures.
      * Choose a random texture index (0..3) and generate a random valid position.
      *
-     * Variable definition and use:
+     * VARIABLE DEFINITION AND USE:
      * img1..img4 - temporary Image objects used to create textures. They must be Unloaded after conversion.
      */
     Food(deque<Vector2> snakeBody)
@@ -252,13 +252,13 @@ public:
 
     /*
      * GenerateRandomCell
-     * Objective: return a single random cell coordinate inside the grid bounds.
-     * Input: none
-     * Output: none
-     * Return value: Vector2 containing x and y integers represented as floats
-     * Side effects: none
+     * OBJECTIVE: return a single random cell coordinate inside the grid bounds.
+     * INPUT : none
+     * OUTPUT: none
+     * RETURN VALUE: Vector2 containing x and y integers represented as floats
+     * SIDE EFFECTS: none
      *
-     * Approach: call GetRandomValue for both x and y within [0, cellcount-1]
+     * APPROACH: call GetRandomValue for both x and y within [0, cellcount-1]
      */
     Vector2 GenerateRandomCell()
     {
@@ -269,16 +269,16 @@ public:
 
     /*
      * GenerateRandomPos
-     * Objective: pick a random cell that is not part of snakeBody.
-     * Input: deque<Vector2> snakeBody - cells to avoid
-     * Output: none
-     * Return value: Vector2 valid cell for food
-     * Side effects: none
+     * OBJECTIVE: pick a random cell that is not part of snakeBody.
+     * INPUT : deque<Vector2> snakeBody - cells to avoid
+     * OUTPUT: none
+     * RETURN VALUE: Vector2 valid cell for food
+     * SIDE EFFECTS: none
      *
-     * Approach: repeatedly call GenerateRandomCell until the chosen cell is not
+     * APPROACH: repeatedly call GenerateRandomCell until the chosen cell is not
      * present in snakeBody using ElementInDeque.
      *
-     * Variable definition and use:
+     * VARIABLE DEFINITION AND USE:
      * newPos - candidate position which is regenerated while it collides with snake.
      */
     Vector2 GenerateRandomPos(deque<Vector2> snakeBody)
@@ -293,13 +293,13 @@ public:
 
     /*
      * Draw
-     * Objective: draw the food texture at its grid position.
-     * Input: none
-     * Output: draws texture to the current render target
-     * Return value: void
-     * Side effects: uses raylib DrawTexture which requires a valid texture
+     * OBJECTIVE: draw the food texture at its grid position.
+     * INPUT : none
+     * OUTPUT: draws texture to the current render target
+     * RETURN VALUE: void
+     * SIDE EFFECTS: uses raylib DrawTexture which requires a valid texture
      *
-     * Approach: convert grid position to pixel coordinates using offset and cellsize
+     * APPROACH: convert grid position to pixel coordinates using offset and cellsize
      */
     void Draw()
     {
@@ -317,8 +317,8 @@ bool Food::loaded = false;
 
 /*
  * Game class
- * Objective: manage the overall game state, input handling, collisions, scoring and audio.
- * Member variables:
+ * OBJECTIVE: manage the overall game state, input handling, collisions, scoring and audio.
+ * MEMBER VARIABLES:
  *  - score : current score for the active round
  *  - speed : interval (in seconds) between automatic game updates (snake movements)
  *  - running : whether the game simulation is currently running
@@ -327,7 +327,7 @@ bool Food::loaded = false;
  *  - fruits : vector of Food objects present on the board
  *  - wall, eat : Sound objects for audio feedback
  *
- * Member functions:
+ * MEMBER FUNCTIONS:
  *  - constructor: loads sounds, initializes fruits and audio device
  *  - destructor: unloads textures & sounds and closes audio device
  *  - Draw: delegates drawing to snake and all fruits
@@ -351,10 +351,10 @@ public:
 
     /*
      * Constructor
-     * Objective: initialize audio subsystem, load sounds and populate initial fruits.
-     * Side effects: allocates audio resources and loads files from disk (may fail on missing files)
+     * OBJECTIVE: initialize audio subsystem, load sounds and populate initial fruits.
+     * SIDE EFFECTS: allocates audio resources and loads files from disk (may fail on missing files)
      *
-     * Approach: call InitAudioDevice, load sound files and create N Food objects while avoiding the snake.
+     * APPROACH: call InitAudioDevice, load sound files and create N Food objects while avoiding the snake.
      */
     Game()
     {
@@ -373,10 +373,10 @@ public:
 
     /*
      * Destructor
-     * Objective: release GPU textures and audio resources when Game object is destroyed.
-     * Side effects: unloading textures and closing audio device affects other audio code
+     * OBJECTIVE: release GPU textures and audio resources when Game object is destroyed.
+     * SIDE EFFECTS: unloading textures and closing audio device affects other audio code
      *
-     * Approach: unload each of the shared Food textures (4), unload sounds and close audio.
+     * APPROACH: unload each of the shared Food textures (4), unload sounds and close audio.
      */
     ~Game()
     {
@@ -389,11 +389,11 @@ public:
 
     /*
      * Draw
-     * Objective: draw the snake and all fruits to the screen.
-     * Input: none
-     * Output: draws objects via raylib
-     * Return value: void
-     * Side effects: renders to screen
+     * OBJECTIVE: draw the snake and all fruits to the screen.
+     * INPUT: none
+     * OUTPUT: draws objects via raylib
+     * RETURN VALUE: void
+     * SIDE EFFECTS: renders to screen
      */
     void Draw()
     {
@@ -404,14 +404,14 @@ public:
 
     /*
      * CheckCollisionWithFood
-     * Objective: detect when the snake head occupies the same cell as a fruit,
+     * OBJECTIVE: detect when the snake head occupies the same cell as a fruit,
      *            handle eating (increase score, grow snake, respawn fruit, play sound).
-     * Input: none (uses members)
-     * Output: updates score, snake.addSegment, fruit position and textureIndex
-     * Return value: void
-     * Side effects: mutates fruits and snake state, plays sound, adjusts speed
+     * INPUT: none (uses members)
+     * OUTPUT: updates score, snake.addSegment, fruit position and textureIndex
+     * RETURN VALUE: void
+     * SIDE EFFECTS: mutates fruits and snake state, plays sound, adjusts speed
      *
-     * Approach: iterate over fruits; if head equals fruit.position, move the fruit
+     * APPROACH: iterate over fruits; if head equals fruit.position, move the fruit
      * to a new valid location, mark snake to grow, increment score and optionally speed up.
      */
     void CheckCollisionWithFood()
@@ -433,13 +433,13 @@ public:
 
     /*
      * CheckCollisionWithEdges
-     * Objective: detect when the snake head moves beyond the grid and trigger game over.
-     * Input: none
-     * Output: may set game_over true and call GameOver()
-     * Return value: void
-     * Side effects: can reset game state and play sound
+     * OBJECTIVE: detect when the snake head moves beyond the grid and trigger game over.
+     * INPUT: none
+     * OUTPUT: may set game_over true and call GameOver()
+     * RETURN VALUE: void
+     * SIDE EFFECTS: can reset game state and play sound
      *
-     * Approach: compare head x/y against grid bounds [0, cellcount-1]; if outside trigger GameOver
+     * APPROACH: compare head x/y against grid bounds [0, cellcount-1]; if outside trigger GameOver
      */
     void CheckCollisionWithEdges()
     {
@@ -459,13 +459,13 @@ public:
 
     /*
      * CheckCollisionsWithTail
-     * Objective: detect self-collision when head overlaps any other body segment and trigger game over.
-     * Input: none
-     * Output: may set game_over true and call GameOver()
-     * Return value: void
-     * Side effects: resets game state and plays collision sound
+     * OBJECTIVE: detect self-collision when head overlaps any other body segment and trigger game over.
+     * INPUT: none
+     * OUTPUT: may set game_over true and call GameOver()
+     * RETURN VALUE: void
+     * SIDE EFFECTS: resets game state and plays collision sound
      *
-     * Approach: copy body to temporary 'headless' deque, remove the head and check if head equals any element.
+     * APPROACH: copy body to temporary 'headless' deque, remove the head and check if head equals any element.
      * This avoids comparing the head with itself.
      */
     void CheckCollisionsWithTail()
@@ -481,11 +481,11 @@ public:
 
     /*
      * Update
-     * Objective: advance game simulation by one tick if running: move snake and run collision checks.
-     * Input: none
-     * Output: updates snake and game state
-     * Return value: void
-     * Side effects: calls snake.Update which mutates its body
+     * OBJECTIVE: advance game simulation by one tick if running: move snake and run collision checks.
+     * INPUT: none
+     * OUTPUT: updates snake and game state
+     * RETURN VALUE: void
+     * SIDE EFFECTS: calls snake.Update which mutates its body
      */
     void Update()
     {
@@ -500,13 +500,13 @@ public:
 
     /*
      * GameOver
-     * Objective: perform end-of-round tasks: reset snake and fruits, adjust speed and track high score.
-     * Input: none
-     * Output: resets game members
-     * Return value: void
-     * Side effects: modifies global high_score and temp_score; resets game to waiting state
+     * OBJECTIVE: perform end-of-round tasks: reset snake and fruits, adjust speed and track high score.
+     * INPUT: none
+     * OUTPUT: resets game members
+     * RETURN VALUE: void
+     * SIDE EFFECTS: modifies global high_score and temp_score; resets game to waiting state
      *
-     * Approach: set game_over flag and reset snake; clear and repopulate fruits; update high_score logic.
+     * APPROACH: set game_over flag and reset snake; clear and repopulate fruits; update high_score logic.
      */
     void GameOver()
     {
@@ -530,14 +530,14 @@ public:
 
 /*
  * main
- * Objective: initialize the window, create UI buttons and run the main game loop handling input,
+ * OBJECTIVE: initialize the window, create UI buttons and run the main game loop handling input,
  *            drawing and game state transitions.
- * Input: none
- * Output: runs the application window until closed
- * Return value: int - 0 on normal exit
- * Side effects: opens window and audio device; loads assets via Game and Button constructors
+ * INPUT: none
+ * OUTPUT: runs the application window until closed
+ * RETURN VALUE: int - 0 on normal exit
+ * SIDE EFFECTS: opens window and audio device; loads assets via Game and Button constructors
  *
- * Approach:
+ * APPROACH:
  * - Initialize window and target FPS
  * - Create Button objects for start/exit/restart
  * - Create Game object which loads audio and textures
