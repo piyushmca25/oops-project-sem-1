@@ -19,26 +19,26 @@
  * Member Functions (public)
  * =============================
  * **Button(const char *imagePath, Vector2 imagePosition, float scale)**
- *   - Objective: Load and scale a button image, convert it into a usable texture,
+ *   - OBJECTIVE: Load and scale a button image, convert it into a usable texture,
  *                and set its drawing position.
- *   - Input: imagePath → File path of the image.
+ *   - INPUT: imagePath → File path of the image.
  *            imagePosition → Screen coordinates.
  *            scale → Scale factor.
- *   - Output: Initializes internal texture and position.
- *   - Side Effects: Allocates GPU memory when loading texture.
+ *   - OUTPUT: Initializes internal texture and position.
+ *   - SIDE EFFECTS: Allocates GPU memory when loading texture.
  *
  * **~Button()**
- *   - Objective: Free GPU memory used by the texture.
- *   - Side Effects: If texture is not unloaded, memory leaks occur.
+ *   - OBJECTIVE: Free GPU memory used by the texture.
+ *   - SIDE EFFECTS: If texture is not unloaded, memory leaks occur.
  *
  * **void Draw()**
- *   - Objective: Render the button on the screen.
- *   - Side Effects: Requires active BeginDrawing/EndDrawing block.
+ *   - OBJECTIVE: Render the button on the screen.
+ *   - SIDE EFFECTS: Requires active BeginDrawing/EndDrawing block.
  *
  * **bool isPressed(Vector2 mousePos, bool mousePressed)**
- *   - Objective: Determine whether the button was clicked.
- *   - Input: mouse position + click state.
- *   - Return: true if click is inside button bounds.
+ *   - OBJECTIVE: Determine whether the button was clicked.
+ *   - INPUT: mouse position + click state.
+ *   - RETURN: true if click is inside button bounds.
  */
 class Button
 {
