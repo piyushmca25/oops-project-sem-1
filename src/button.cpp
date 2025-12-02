@@ -3,23 +3,23 @@
 /**
  * Button::Button
  * ============================
- * Objective:
+ * OBJECTIVE:
  *   Load an image from disk, scale it, convert it into a texture, and initialize
  *   the button's on-screen position.
  *
- * Input:
+ * INPUT:
  *   - const char* imagePath → File path of the button image.
  *   - Vector2 imagePosition → Screen coordinates where the button will appear.
  *   - float scale → Scaling factor applied to the image before converting to a texture.
  *
- * Output:
+ * OUTPUT:
  *   - Loads and assigns a scaled texture to the button.
  *   - Stores the drawing position.
  *
- * Return Value:
+ * RETURN VALUE:
  *   - None (constructor).
  *
- * Side Effects:
+ * SIDE EFFECTS:
  *   - Loads image and texture into system/GPU memory.
  *   - If file path is invalid, texture may fail to load and cause runtime issues.
  */
@@ -52,14 +52,14 @@ Button::Button(const char *imagePath, Vector2 imagePosition, float scale)
 /**
  * Button::~Button
  * =============================
- * Objective:
+ * OBJECTIVE:
  *   Properly unload the texture from GPU memory.
  *
- * Input: None
- * Output: Frees GPU texture resources.
- * Return Value: None (destructor)
+ * INPUT: None
+ * OUTPUT: Frees GPU texture resources.
+ * RETURN VALUE: None (destructor)
  *
- * Side Effects:
+ * SIDE EFFECTS:
  *   - If texture unloading is skipped, program leaks GPU memory.
  */
 Button::~Button()
@@ -70,18 +70,18 @@ Button::~Button()
 /**
  * Button::Draw
  * =============================
- * Objective:
+ * OBJECTIVE:
  *   Render the button texture at its assigned position.
  *
- * Input: None
- * Output: Draws texture onto the active render target.
- * Return Value: void
+ * INPUT: None
+ * OUTPUT: Draws texture onto the active render target.
+ * RETURN VALUE: void
  *
- * Side Effects:
+ * SIDE EFFECTS:
  *   - Requires a valid BeginDrawing()/EndDrawing() block.
  *   - Uses GPU for rendering.
  *
- * Approach:
+ * APPROACH:
  *   Use DrawTextureV to draw texture at a Vector2 location.
  */
 void Button::Draw()
@@ -92,23 +92,23 @@ void Button::Draw()
 /**
  * Button::isPressed
  * =============================
- * Objective:
+ * OBJECTIVE:
  *   Determine whether the left mouse button was pressed inside the button area.
  *
- * Input:
+ * INPUT:
  *   - Vector2 mousePos → Current mouse coordinates.
  *   - bool mousePressed → True if mouse button was clicked this frame.
  *
- * Output:
+ * OUTPUT:
  *   - Returns true if the button was clicked.
  *
- * Return Value:
+ * RETURN VALUE:
  *   - bool → true if click happens inside the button bounds, false otherwise.
  *
- * Side Effects:
+ * SIDE EFFECTS:
  *   - None (pure logic).
  *
- * Approach:
+ * APPROACH:
  *   Build a Rectangle matching button size, then use raylib collision check.
  */
 bool Button::isPressed(Vector2 mousePos, bool mousePressed)
